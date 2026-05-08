@@ -23,4 +23,8 @@ public class Tramite
         FechaUltimaModificacion = FechaCreacion;
     }
 
+    public void ModificarContenido(ContenidoTramite nuevoContenido, Guid usuarioId)
+    {
+        this.Contenido = nuevoContenido;
+    }
 }
