@@ -20,3 +20,4 @@ C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Consola\obj\Debug\
 C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Consola\obj\Debug\net10.0\SGE.Consola.pdb
 C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Consola\obj\Debug\net10.0\SGE.Consola.genruntimeconfig.cache
 C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Consola\obj\Debug\net10.0\ref\SGE.Consola.dll
+C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Consola\obj\Debug\net10.0\SGE.Consola.sourcelink.json

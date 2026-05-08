@@ -15,3 +15,4 @@ C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Infraestructura\ob
 C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Infraestructura\obj\Debug\net10.0\refint\SGE.Infraestructura.dll
 C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Infraestructura\obj\Debug\net10.0\SGE.Infraestructura.pdb
 C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Infraestructura\obj\Debug\net10.0\ref\SGE.Infraestructura.dll
+C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Infraestructura\obj\Debug\net10.0\SGE.Infraestructura.sourcelink.json
