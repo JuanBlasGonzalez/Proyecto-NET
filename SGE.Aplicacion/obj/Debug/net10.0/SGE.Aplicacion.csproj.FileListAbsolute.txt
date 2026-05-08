@@ -13,3 +13,4 @@ C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Aplicacion\obj\Deb
 C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Aplicacion\obj\Debug\net10.0\refint\SGE.Aplicacion.dll
 C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Aplicacion\obj\Debug\net10.0\SGE.Aplicacion.pdb
 C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Aplicacion\obj\Debug\net10.0\ref\SGE.Aplicacion.dll
+C:\Users\valen\OneDrive\Escritorio\Facultad\2026\.NET\SGE\SGE.Aplicacion\obj\Debug\net10.0\SGE.Aplicacion.sourcelink.json

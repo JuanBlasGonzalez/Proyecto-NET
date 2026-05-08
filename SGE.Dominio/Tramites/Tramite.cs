@@ -26,5 +26,7 @@ public class Tramite
     public void ModificarContenido(ContenidoTramite nuevoContenido, Guid usuarioId)
     {
         this.Contenido = nuevoContenido;
+        this.FechaUltimaModificacion = DateTime.Now;
+        this.UsuarioUltimoCambio = usuarioId;
     }
 }
