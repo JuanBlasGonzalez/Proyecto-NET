@@ -1,31 +1,36 @@
-using SGE.Aplicacion.Expedientes; // Para usar IExpedienteRepository
+using SGE.Aplicacion.Expedientes;
 using SGE.Dominio.Tramites;
 using SGE.Dominio.Expedientes;
 using SGE.Aplicacion.Autorizacion;
 
 namespace SGE.Aplicacion.Tramites;
 
-public record AltaTramiteRequest(Guid ExpedienteId, string Contenido, SGE.Dominio.Tramites.EtiquetaTramite Etiqueta, Guid UsuarioId);
-
 public class AltaTramiteUseCase(
     ITramiteRepository repoTram, 
     IAutorizacionService auth, 
     ActualizacionEstadoExpedienteService servicioEstado)
 {
-    public void Ejecutar(AltaTramiteRequest request)
+    // 1. Cambiamos el tipo de retorno de void a AltaTramiteResponse
+    public AltaTramiteResponse Ejecutar(AltaTramiteRequest request)
     {
+        // 2. Validación de permisos
         if (!auth.PoseeElPermiso(request.UsuarioId, Permiso.TramiteAlta))
-            throw new AutorizacionException("Sin permisos.");
+            throw new AutorizacionException("Sin permisos para dar de alta un trámite.");
 
-        var tramite = new SGE.Dominio.Tramites.Tramite(
+        // 3. Creación de la entidad
+        var tramite = new Tramite(
             request.ExpedienteId, 
             request.Etiqueta, 
-            new SGE.Dominio.Tramites.ContenidoTramite(request.Contenido), 
+            new ContenidoTramite(request.Contenido), 
             request.UsuarioId);
 
+        // 4. Persistencia
         repoTram.Agregar(tramite);
 
-        // Delegamos la actualización del estado al servicio orquestador
+        // 5. Actualización del estado del expediente (Orquestación)
         servicioEstado.Actualizar(request.ExpedienteId, request.UsuarioId);
+
+        // 6. Retornamos el Response con el ID generado
+        return new AltaTramiteResponse(tramite.Id, true);
     }
 }

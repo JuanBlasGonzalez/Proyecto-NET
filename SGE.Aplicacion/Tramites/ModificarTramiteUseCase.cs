@@ -8,17 +8,27 @@ public class ModificarTramiteUseCase(
     IAutorizacionService auth,
     ActualizacionEstadoExpedienteService servicioEstado)
 {
-    public void Ejecutar(ModificarTramiteRequest request)
+    // Cambiamos void por el DTO de salida
+    public ModificarTramiteResponse Ejecutar(ModificarTramiteRequest request)
     {
+        // 1. Validación de permisos
         if (!auth.PoseeElPermiso(request.UsuarioId, Permiso.TramiteModificacion))
             throw new AutorizacionException("No tiene permisos para modificar trámites.");
 
-        var tramite = repo.ObtenerPorId(request.IdTramite) ?? throw new Exception("Trámite no encontrado.");
+        // 2. Búsqueda en repositorio (con manejo de excepción si no existe)
+        var tramite = repo.ObtenerPorId(request.IdTramite) 
+            ?? throw new Exception("Trámite no encontrado.");
 
-        tramite.ModificarContenido(new ContenidoTramite(request.NuevoContenido),request.UsuarioId);
+        // 3. Lógica de Dominio
+        tramite.ModificarContenido(new ContenidoTramite(request.NuevoContenido), request.UsuarioId);
 
+        // 4. Persistencia
         repo.Modificar(tramite);
 
+        // 5. Orquestación: Actualizar el estado del expediente por si el trámite cambió
         servicioEstado.Actualizar(tramite.ExpedienteId, request.UsuarioId);
+
+        // 6. Retorno de DTO
+        return new ModificarTramiteResponse(true);
     }
 }

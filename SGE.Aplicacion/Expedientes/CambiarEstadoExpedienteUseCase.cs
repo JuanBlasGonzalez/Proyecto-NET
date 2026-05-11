@@ -5,21 +5,18 @@ namespace SGE.Aplicacion.Expedientes;
 
 public class CambiarEstadoExpedienteUseCase(IExpedienteRepository repo, IAutorizacionService auth)
 {
-    public void Ejecutar(CambiarEstadoRequest request)
+    public CambiarEstadoResponse Ejecutar(CambiarEstadoRequest request)
     {
-        // 1. Validar permisos (Usamos el de modificación)
         if (!auth.PoseeElPermiso(request.UsuarioId, Permiso.ExpedienteModificacion))
-            throw new AutorizacionException("No tiene permisos para cambiar el estado del expediente.");
+            throw new AutorizacionException("Sin permisos.");
 
-        // 2. Buscar el expediente
         var expediente = repo.ObtenerPorId(request.IdExpediente) 
             ?? throw new Exception("Expediente no encontrado.");
 
-        // 3. Cambiar el estado usando el método del Dominio
-        // (Asegurate que en tu clase Expediente el método se llame CambiarEstado)
+        // Este es el cambio MANUAL pedido por el enunciado
         expediente.CambiarEstado(request.NuevoEstado, request.UsuarioId);
 
-        // 4. Persistir el cambio
         repo.Modificar(expediente);
+        return new CambiarEstadoResponse(true);
     }
 }
