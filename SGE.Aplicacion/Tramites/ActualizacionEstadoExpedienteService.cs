@@ -7,7 +7,7 @@ public class ActualizacionEstadoExpedienteService(IExpedienteRepository repoExp,
     public void Actualizar(Guid expedienteId, Guid usuarioId)
     {
         var expediente = repoExp.ObtenerPorId(expedienteId) 
-            ?? throw new Exception("Expediente no encontrado.");
+            ?? throw new RepositorioException("Expediente no encontrado.");
 
         // Buscamos el último trámite (el de fecha más reciente)
         var ultimoTramite = repoTram.ObtenerPorExpedienteId(expedienteId)
