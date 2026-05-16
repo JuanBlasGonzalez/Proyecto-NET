@@ -1,5 +1,5 @@
 using SGE.Aplicacion.Expedientes;
-
+using SGE.Aplicacion.ExceptionApp;
 namespace SGE.Aplicacion.Tramites;
 
 public class ActualizacionEstadoExpedienteService(IExpedienteRepository repoExp, ITramiteRepository repoTram)

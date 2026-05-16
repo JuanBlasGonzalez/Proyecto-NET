@@ -12,6 +12,11 @@ public class Tramite
     public DateTime FechaUltimaModificacion { get; private set; }
     public Guid UsuarioUltimoCambio { get; private set; }
 
+    private Tramite() 
+    {
+        // Constructor vacío para uso exclusivo de Reconstruir
+    }
+    
     public Tramite(Guid expedienteId, EtiquetaTramite etiqueta, ContenidoTramite contenido, Guid usuarioId)
     {
         Id = Guid.NewGuid();
@@ -28,5 +33,19 @@ public class Tramite
         this.Contenido = nuevoContenido;
         this.FechaUltimaModificacion = DateTime.Now;
         this.UsuarioUltimoCambio = usuarioId;
+    }
+
+    public static Tramite Reconstruir(Guid id, Guid expedienteId, EtiquetaTramite etiqueta, ContenidoTramite contenido, DateTime fechaCreacion, DateTime fechaUltimaModificacion, Guid usuarioUltimoCambio)
+    {
+        var tramite = new Tramite();
+        tramite.Id = id;
+        tramite.ExpedienteId = expedienteId;
+        tramite.Etiqueta = etiqueta;
+        tramite.Contenido = contenido;
+        tramite.FechaCreacion = fechaCreacion;
+        tramite.FechaUltimaModificacion = fechaUltimaModificacion;
+        tramite.UsuarioUltimoCambio = usuarioUltimoCambio;
+        
+        return tramite;
     }
 }

@@ -14,6 +14,11 @@ public class Expediente
     public Guid UsuarioUltimoCambio { get; private set; } 
     public EstadoExpediente Estado { get; private set; }
 
+    private Expediente() 
+    {
+        // Constructor vacío para que la persistencia arme el objeto
+    }
+
     // Constructor para el "Alta" de un expediente 
     public Expediente(Caratula caratula, Guid idUsuario)
     {
@@ -75,5 +80,18 @@ public class Expediente
         this.Estado = nuevoEstado;
         this.UsuarioUltimoCambio = idUsuario;
         this.FechaUltimaModificacion = DateTime.Now;
+    }
+
+    public static Expediente Reconstruir(Guid id, Caratula caratula, DateTime fechaCreacion, DateTime fechaUltimaModificacion, Guid usuarioUltimoCambio, EstadoExpediente estado)
+    {
+        var expediente = new Expediente();
+        expediente.Id = id;
+        expediente.Caratula = caratula;
+        expediente.FechaCreacion = fechaCreacion;
+        expediente.FechaUltimaModificacion = fechaUltimaModificacion;
+        expediente.UsuarioUltimoCambio = usuarioUltimoCambio;
+        expediente.Estado = estado;
+        
+        return expediente;
     }
 }
