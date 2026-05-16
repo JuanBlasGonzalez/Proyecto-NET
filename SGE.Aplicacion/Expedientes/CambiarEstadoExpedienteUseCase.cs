@@ -1,9 +1,10 @@
 using SGE.Aplicacion.Autorizacion;
 using SGE.Dominio.Expedientes;
+using SGE.Aplicacion.Fecha;
 
 namespace SGE.Aplicacion.Expedientes;
 
-public class CambiarEstadoExpedienteUseCase(IExpedienteRepository repo, IAutorizacionService auth)
+public class CambiarEstadoExpedienteUseCase(IExpedienteRepository repo, IAutorizacionService auth, IDateTimeProvider timeProvider)
 {
     public CambiarEstadoResponse Ejecutar(CambiarEstadoRequest request)
     {
@@ -13,8 +14,9 @@ public class CambiarEstadoExpedienteUseCase(IExpedienteRepository repo, IAutoriz
         var expediente = repo.ObtenerPorId(request.IdExpediente) 
             ?? throw new Exception("Expediente no encontrado.");
 
-        // Este es el cambio MANUAL pedido por el enunciado
-        expediente.CambiarEstado(request.NuevoEstado, request.UsuarioId);
+        var fechaActual = timeProvider.ObtenerFechaActual();
+        // Se pasa la fecha actual para que el expediente registre cuándo cambió de estado
+        expediente.CambiarEstado(request.NuevoEstado, request.UsuarioId, fechaActual);
 
         repo.Modificar(expediente);
         return new CambiarEstadoResponse(true);

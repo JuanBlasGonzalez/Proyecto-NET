@@ -16,22 +16,22 @@ public class Tramite
     {
         // Constructor vacío para uso exclusivo de Reconstruir
     }
-    
-    public Tramite(Guid expedienteId, EtiquetaTramite etiqueta, ContenidoTramite contenido, Guid usuarioId)
+
+    public Tramite(Guid expedienteId, EtiquetaTramite etiqueta, ContenidoTramite contenido, Guid usuarioId,DateTime fechaCreacion)
     {
         Id = Guid.NewGuid();
         ExpedienteId = expedienteId;
         Etiqueta = etiqueta;
         Contenido = contenido;
         UsuarioUltimoCambio = usuarioId;
-        FechaCreacion = DateTime.Now;
-        FechaUltimaModificacion = FechaCreacion;
+        FechaCreacion = fechaCreacion;
+        FechaUltimaModificacion = fechaCreacion;
     }
 
-    public void ModificarContenido(ContenidoTramite nuevoContenido, Guid usuarioId)
+    public void ModificarContenido(ContenidoTramite nuevoContenido, Guid usuarioId,DateTime fechaModificacion)
     {
         this.Contenido = nuevoContenido;
-        this.FechaUltimaModificacion = DateTime.Now;
+        this.FechaUltimaModificacion = fechaModificacion;
         this.UsuarioUltimoCambio = usuarioId;
     }
 

@@ -20,25 +20,25 @@ public class Expediente
     }
 
     // Constructor para el "Alta" de un expediente 
-    public Expediente(Caratula caratula, Guid idUsuario)
+    public Expediente(Caratula caratula, Guid idUsuario,DateTime fechaCreacion)
     {
         Id = Guid.NewGuid(); //Generacion automatica del ID
         Caratula = caratula; 
         UsuarioUltimoCambio = idUsuario; 
         //Al crear el expediente ambas fechas son iguales 
-        FechaCreacion = DateTime.Now; 
-        FechaUltimaModificacion = FechaCreacion; 
+        FechaCreacion = fechaCreacion; 
+        FechaUltimaModificacion = fechaCreacion; 
         Estado = EstadoExpediente.RecienIniciado; //Al crear el exp siempre es RecienIniciado
     }
 
-    public void ModificarCaratula (Caratula nuevaCaratula, Guid idUsuario)
+    public void ModificarCaratula (Caratula nuevaCaratula, Guid idUsuario,DateTime fechaModificacion)
     {
         this.Caratula = nuevaCaratula;
         this.UsuarioUltimoCambio = idUsuario;
-        this.FechaUltimaModificacion = DateTime.Now;
+        this.FechaUltimaModificacion = fechaModificacion;
     }
 
-    public bool ActualizarEstado (EtiquetaTramite? ultimaEtiqueta, Guid idUsuario)
+    public bool ActualizarEstado (EtiquetaTramite? ultimaEtiqueta, Guid idUsuario, DateTime fechaModificacion)
     {
         // Guardamos el estado anterior para saber si realmente hubo un cambio al final
         EstadoExpediente estadoAnterior = this.Estado;
@@ -67,19 +67,19 @@ public class Expediente
         if (this.Estado != estadoAnterior)
         {
             this.UsuarioUltimoCambio = idUsuario;
-            this.FechaUltimaModificacion = DateTime.Now;
+            this.FechaUltimaModificacion = fechaModificacion;
             return true; // Hubo cambio
         }
 
         return false; // No hubo cambio
     }
 
-    public void CambiarEstado (EstadoExpediente nuevoEstado, Guid idUsuario)
+    public void CambiarEstado (EstadoExpediente nuevoEstado, Guid idUsuario,DateTime fechaModificacion)
     {
         // Simplemente asignamos el nuevo estado enviado
         this.Estado = nuevoEstado;
         this.UsuarioUltimoCambio = idUsuario;
-        this.FechaUltimaModificacion = DateTime.Now;
+        this.FechaUltimaModificacion = fechaModificacion;
     }
 
     public static Expediente Reconstruir(Guid id, Caratula caratula, DateTime fechaCreacion, DateTime fechaUltimaModificacion, Guid usuarioUltimoCambio, EstadoExpediente estado)

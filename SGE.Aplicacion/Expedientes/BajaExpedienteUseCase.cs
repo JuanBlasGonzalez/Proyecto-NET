@@ -4,6 +4,7 @@ using SGE.Aplicacion.Autorizacion;
 using SGE.Aplicacion.ExceptionApp;
 using SGE.Dominio.Expedientes;
 using SGE.Aplicacion.Tramites;
+using SGE.Aplicacion.Fecha;
 
 public class BajaExpedienteUseCase(IExpedienteRepository repoExp, ITramiteRepository repoTram, IAutorizacionService auth)
 {

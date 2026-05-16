@@ -7,6 +7,10 @@ using SGE.Infraestructura.Persistencia;
 using SGE.Infraestructura.Servicios;
 using SGE.Dominio.Tramites;
 using SGE.Dominio.Comun; // Por si tus excepciones de dominio están acá
+using SGE.Aplicacion.Fecha;
+//using System.Text.Json.Serialization; // Por si tu IDateTimeProvider está acá
+//using SGE.Infraestructura.Servicios;
+
 
 Console.WriteLine("=================================================");
 Console.WriteLine("   SGE - SISTEMA DE GESTIÓN DE EXPEDIENTES       ");
@@ -20,10 +24,13 @@ IExpedienteRepository repoExp = new ExpedienteTxtRepository();
 ITramiteRepository repoTram = new TramiteTxtRepository();
 IAutorizacionService auth = new AutorizacionProvisionalService();
 
+// Verificá que el nombre coincida exactamente con la clase que creaste en Infraestructura
+IDateTimeProvider dateTimeProvider = new MachineDateTimeProvider(); 
+
 var servicioEstado = new ActualizacionEstadoExpedienteService(repoExp, repoTram);
 
-var ucAltaExpediente = new AltaExpedienteUseCase(repoExp, auth);
-var ucAltaTramite = new AltaTramiteUseCase(repoTram, auth, servicioEstado);
+var ucAltaExpediente = new AltaExpedienteUseCase(repoExp, auth, dateTimeProvider);
+var ucAltaTramite = new AltaTramiteUseCase(repoTram, auth, servicioEstado, dateTimeProvider);
 var ucListarTramites = new ListarTramitesPorExpedienteUseCase(repoTram);
 
 Guid usuarioId = Guid.NewGuid();
