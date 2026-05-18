@@ -22,7 +22,6 @@ IExpedienteRepository repoExp = new ExpedienteTxtRepository();
 ITramiteRepository repoTram = new TramiteTxtRepository();
 IAutorizacionService auth = new AutorizacionProvisionalService();
 
-// Verificá que el nombre coincida exactamente con la clase que creaste en Infraestructura
 IDateTimeProvider dateTimeProvider = new MachineDateTimeProvider(); 
 
 var servicioEstado = new ActualizacionEstadoExpedienteService(repoExp, repoTram);
@@ -78,7 +77,7 @@ try
     Console.WriteLine("\n>>> [TEST 2: CAMINO DE ERROR - VALIDADOR DE DOMINIO] <<<");
     Console.WriteLine("Intentando crear un expediente con carátula vacía...");
     
-    // Aqui deberiamos poder observar el error de dominio que lanzamos desde el Value Object CARATULA.
+    // Validamos de poder observar el error de dominio que lanzamos desde el Value Object CARATULA.
     var reqInvalido = new AltaExpedienteRequest("", usuarioId); 
     ucAltaExpediente.Ejecutar(reqInvalido);
     
