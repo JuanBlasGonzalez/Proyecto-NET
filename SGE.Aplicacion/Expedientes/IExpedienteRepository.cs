@@ -2,6 +2,7 @@ using SGE.Dominio.Expedientes;
 
 namespace SGE.Aplicacion.Expedientes; 
 
+// Esta interfaz define el contrato para un repositorio de expedientes en la aplicación.
 public interface IExpedienteRepository
 {
     void Agregar(Expediente expediente);

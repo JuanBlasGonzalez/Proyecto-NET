@@ -1,11 +1,12 @@
 using SGE.Aplicacion.Expedientes;
 using SGE.Aplicacion.ExceptionApp;
 using SGE.Dominio.Expedientes;
-using SGE.Dominio.Comun; // Por tu Value Object Caratula
-using System.Text.Json;
+using SGE.Dominio.Comun; 
+using System.Text.Json; // Para la serialización de los expedientes en el archivo de texto
 
 namespace SGE.Infraestructura.Persistencia;
 
+// Esta clase implementa la interfaz IExpedienteRepository utilizando un archivo de texto para almacenar los datos de los expedientes.
 public class ExpedienteTxtRepository : IExpedienteRepository
 {
     private readonly string _path = "expedientes.txt";

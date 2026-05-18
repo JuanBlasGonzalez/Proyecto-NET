@@ -7,11 +7,12 @@ using SGE.Aplicacion.Fecha;
 
 namespace SGE.Aplicacion.Tramites;
 
+// Esta clase representa el caso de uso para dar de alta un nuevo trámite en un expediente existente.
 public class AltaTramiteUseCase(
     ITramiteRepository repoTram, 
     IAutorizacionService auth, 
     ActualizacionEstadoExpedienteService servicioEstado,
-    IDateTimeProvider dateTimeProvider) // Inyección opcional para pruebas
+    IDateTimeProvider dateTimeProvider) 
 {
     // 1. Cambiamos el tipo de retorno de void a AltaTramiteResponse
     public AltaTramiteResponse Ejecutar(AltaTramiteRequest request)
@@ -33,7 +34,7 @@ public class AltaTramiteUseCase(
         // 4. Persistencia
         repoTram.Agregar(tramite);
 
-        // 5. Actualización del estado del expediente (Orquestación)
+        // 5. Actualización del estado del expediente en función del nuevo trámite registrado
         servicioEstado.Actualizar(request.ExpedienteId, request.UsuarioId, fechaActual);
 
         // 6. Retornamos el Response con el ID generado

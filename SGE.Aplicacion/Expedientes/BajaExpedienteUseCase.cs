@@ -6,9 +6,10 @@ using SGE.Dominio.Expedientes;
 using SGE.Aplicacion.Tramites;
 using SGE.Aplicacion.Fecha;
 
+// Esta clase representa el caso de uso para la eliminación de un expediente existente.
+// El constructor de la clase toma tres dependencias: un repositorio de expedientes (IExpedienteRepository), un repositorio de trámites (ITramiteRepository) y un servicio de autorización (IAutorizacionService).
 public class BajaExpedienteUseCase(IExpedienteRepository repoExp, ITramiteRepository repoTram, IAutorizacionService auth)
 {
-    // Cambiamos void por el record de Response
     public BajaExpedienteResponse Ejecutar(BajaExpedienteRequest request)
     {
         // 1. Validar permisos

@@ -1,5 +1,6 @@
 namespace SGE.Aplicacion.Tramites;
 
+// Esta clase representa el caso de uso para listar los trámites asociados a un expediente específico.
 public class ListarTramitesPorExpedienteUseCase(ITramiteRepository repo)
 {
     public IEnumerable<TramiteDTO> Ejecutar(Guid expedienteId)

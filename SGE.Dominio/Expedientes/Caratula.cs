@@ -1,7 +1,9 @@
 namespace SGE.Dominio.Expedientes;
 using SGE.Dominio.Comun;
 
-//Record class es una clase que proveee inmutabilidad e igualdad estructural --> Value Objetc
+// Esta clase representa la carátula de un expediente, que es un valor que no puede ser modificado después de su creación.
+// La clausula Record class se utiliza para definir una clase inmutable que se comporta como un valor, 
+//lo que significa que dos instancias de Caratula con el mismo valor serán consideradas iguales.
 public record class Caratula
 {
     public string Valor { get; }

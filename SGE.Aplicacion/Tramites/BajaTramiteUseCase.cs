@@ -6,6 +6,7 @@ using SGE.Aplicacion.ExceptionApp;
 using SGE.Aplicacion.Fecha;
 
 namespace SGE.Aplicacion.Tramites;
+// Esta clase representa el caso de uso para dar de baja un trámite existente.
 public class BajaTramiteUseCase(ITramiteRepository repo, IAutorizacionService auth, ActualizacionEstadoExpedienteService servicioEstado, IDateTimeProvider dateTimeProvider)
 {
     public void Ejecutar(Guid tramiteId, Guid usuarioId)

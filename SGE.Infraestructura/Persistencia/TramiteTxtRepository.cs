@@ -1,10 +1,11 @@
 using SGE.Aplicacion.Tramites;
 using SGE.Aplicacion.ExceptionApp;
 using SGE.Dominio.Tramites;
-using System.Text.Json;
+using System.Text.Json; // Para la serialización de los trámites en el archivo de texto
 
 namespace SGE.Infraestructura.Persistencia;
 
+// Esta clase implementa la interfaz ITramiteRepository utilizando un archivo de texto para almacenar los datos de los trámites.
 public class TramiteTxtRepository : ITramiteRepository
 {
     private readonly string _path = "tramites.txt";

@@ -1,5 +1,6 @@
 namespace SGE.Aplicacion.Tramites;
 
+// Esta clase es un DTO (Data Transfer Object) que se utiliza para transferir datos relacionados con un trámite entre diferentes capas de la aplicación.
 public class TramiteDTO
 {
     public Guid Id { get; set; }

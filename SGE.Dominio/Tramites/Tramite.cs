@@ -2,6 +2,7 @@ using System;
 
 namespace SGE.Dominio.Tramites;
 
+// Clase que representa un tramite.
 public class Tramite
 {
     public Guid Id { get; private set; }
@@ -17,6 +18,7 @@ public class Tramite
         // Constructor vacío para uso exclusivo de Reconstruir
     }
 
+    // Constructor para el "Alta" de un tramite
     public Tramite(Guid expedienteId, EtiquetaTramite etiqueta, ContenidoTramite contenido, Guid usuarioId,DateTime fechaCreacion)
     {
         Id = Guid.NewGuid();
@@ -28,6 +30,7 @@ public class Tramite
         FechaUltimaModificacion = fechaCreacion;
     }
 
+    // Permite modificar el contenido del trámite, y al mismo tiempo actualiza el usuario que hizo el cambio y la fecha de modificación.
     public void ModificarContenido(ContenidoTramite nuevoContenido, Guid usuarioId,DateTime fechaModificacion)
     {
         this.Contenido = nuevoContenido;
@@ -35,6 +38,7 @@ public class Tramite
         this.UsuarioUltimoCambio = usuarioId;
     }
 
+    // Este método estático se utiliza para reconstruir un trámite a partir de sus propiedades, lo que es útil para la persistencia y recuperación de datos.
     public static Tramite Reconstruir(Guid id, Guid expedienteId, EtiquetaTramite etiqueta, ContenidoTramite contenido, DateTime fechaCreacion, DateTime fechaUltimaModificacion, Guid usuarioUltimoCambio)
     {
         var tramite = new Tramite();

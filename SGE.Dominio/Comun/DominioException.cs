@@ -1,6 +1,6 @@
 namespace SGE.Dominio.Comun;
 
-// Esta clase hereda de Exception para que .NET la reconozca como un error válido
+// Esta clase hereda de Exception y se utiliza para representar excepciones específicas del dominio de la aplicación.
 public class DominioException : Exception
 {
     public DominioException(string mensaje) : base(mensaje) { }

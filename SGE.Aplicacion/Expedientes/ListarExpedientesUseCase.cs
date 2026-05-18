@@ -1,17 +1,18 @@
 namespace SGE.Aplicacion.Expedientes;
 
+// Esta clase representa el caso de uso para listar todos los expedientes existentes en la aplicación.
+// El constructor de la clase toma una dependencia: un repositorio de expedientes (IExpedienteRepository), que se utiliza para acceder a los datos de los expedientes almacenados en la aplicación. 
 public class ListarExpedientesUseCase(IExpedienteRepository repo)
 {
     public IEnumerable<ExpedienteDTO> Ejecutar()
     {
         var expedientes = repo.ObtenerTodos();
         
-        // Mapeamos de Entidad a DTO para que no "escapen" las entidades de la capa
         return expedientes.Select(e => new ExpedienteDTO(
             e.Id, 
             e.Caratula.Valor, 
             e.Estado.ToString(), 
-            e.FechaUltimaModificacion // Asegurate que este nombre coincida con tu entidad
+            e.FechaUltimaModificacion 
         ));
     }
 }
