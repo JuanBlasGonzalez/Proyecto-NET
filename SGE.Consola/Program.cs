@@ -6,10 +6,8 @@ using SGE.Aplicacion.ExceptionApp;
 using SGE.Infraestructura.Persistencia;
 using SGE.Infraestructura.Servicios;
 using SGE.Dominio.Tramites;
-using SGE.Dominio.Comun; // Por si tus excepciones de dominio están acá
+using SGE.Dominio.Comun; 
 using SGE.Aplicacion.Fecha;
-//using System.Text.Json.Serialization; // Por si tu IDateTimeProvider está acá
-//using SGE.Infraestructura.Servicios;
 
 
 Console.WriteLine("=================================================");
@@ -80,13 +78,13 @@ try
     Console.WriteLine("\n>>> [TEST 2: CAMINO DE ERROR - VALIDADOR DE DOMINIO] <<<");
     Console.WriteLine("Intentando crear un expediente con carátula vacía...");
     
-    // Esto debería hacer saltar la lógica de validación de tu Value Object 'Caratula'
+    // Aqui deberiamos poder observar el error de dominio que lanzamos desde el Value Object CARATULA.
     var reqInvalido = new AltaExpedienteRequest("", usuarioId); 
     ucAltaExpediente.Ejecutar(reqInvalido);
     
     Console.WriteLine("[ALERTA] Si ves esto, la validación falló (permitió carátula vacía).");
 }
-catch (ArgumentException ex) // O cambia por tu 'DominioException' si creaste una específica
+catch (ArgumentException ex)
 {
     Console.WriteLine($"[ERROR DE DOMINIO CAPTURADO EXITOSAMENTE]: {ex.Message}");
 }
