@@ -1,24 +1,27 @@
 using SGE.Aplicacion.Expedientes;
 using SGE.Dominio.Tramites;
-using SGE.Dominio.Expedientes;
 using SGE.Aplicacion.Autorizacion;
-using SGE.Aplicacion.ExceptionApp;
 using SGE.Aplicacion.Fecha;
 
 namespace SGE.Aplicacion.Tramites;
-// Esta clase representa el caso de uso para dar de baja un trámite existente.
+
 public class BajaTramiteUseCase(ITramiteRepository repo, IAutorizacionService auth, ActualizacionEstadoExpedienteService servicioEstado, IDateTimeProvider dateTimeProvider)
 {
-    public void Ejecutar(Guid tramiteId, Guid usuarioId)
+    // Ahora recibe el Request corporativo y devuelve el Response correspondiente
+    public BajaTramiteResponse Ejecutar(BajaTramiteRequest request)
     {
-        if (!auth.PoseeElPermiso(usuarioId, Permiso.TramiteBaja))
+        if (!auth.PoseeElPermiso(request.UsuarioId, Permiso.TramiteBaja))
             throw new AutorizacionException("No tiene permisos.");
 
-        var tramite = repo.ObtenerPorId(tramiteId) ?? throw new Exception("No existe");
+        var tramite = repo.ObtenerPorId(request.TramiteId) 
+            ?? throw new Exception("No existe el trámite especificado.");
+            
         var fechaActual = dateTimeProvider.ObtenerFechaActual();
-        repo.Eliminar(tramiteId);
+        repo.Eliminar(request.TramiteId);
 
-        //Al borrarlo, el expediente debe recalcular su estado
-        servicioEstado.Actualizar(tramite.ExpedienteId, usuarioId, fechaActual);
+        // Al borrarlo, el expediente debe recalcular su estado
+        servicioEstado.Actualizar(tramite.ExpedienteId, request.UsuarioId, fechaActual);
+
+        return new BajaTramiteResponse(true, "Trámite eliminado exitosamente y estado de expediente recalculado.");
     }
 }

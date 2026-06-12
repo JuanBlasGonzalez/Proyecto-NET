@@ -19,22 +19,45 @@ public class Expediente
         // Constructor vacío para que la persistencia arme el objeto
     }
 
-    // Constructor para el "Alta" de un expediente 
-    public Expediente(Caratula caratula, Guid idUsuario,DateTime fechaCreacion)
+    public Expediente(Caratula caratula, Guid idUsuario, DateTime fechaCreacion)
+    : this(Guid.NewGuid(), caratula, fechaCreacion, fechaCreacion, idUsuario, EstadoExpediente.RecienIniciado)
     {
-        Id = Guid.NewGuid(); //Generacion automatica del ID
-        Caratula = caratula; 
-        UsuarioUltimoCambio = idUsuario; 
-        //Al crear el expediente ambas fechas son iguales 
-        FechaCreacion = fechaCreacion; 
-        FechaUltimaModificacion = fechaCreacion; 
-        Estado = EstadoExpediente.RecienIniciado; //Al crear el exp siempre es RecienIniciado
+       //Llama al constructor privado con los parametros iniciales del alta. 
+    }
+
+    // Constructor privado centralizado --> Asigna y valida los datos del objeto
+    private Expediente(Guid id, Caratula caratula, DateTime fechaCreacion, DateTime fechaUltimaModificacion, Guid usuarioUltimoCambio, EstadoExpediente estado)
+    {
+        if (id == Guid.Empty) 
+            throw new DominioException("El ID del expediente no puede ser un Guid vacío.");
+        
+        if (usuarioUltimoCambio == Guid.Empty) 
+            throw new DominioException("El usuario del último cambio no puede ser un Guid vacío.");
+
+        if (fechaUltimaModificacion < fechaCreacion) 
+            throw new DominioException("La fecha de última modificación no puede ser anterior a la fecha de creación.");
+
+        if (fechaCreacion > DateTime.Now)
+            throw new DominioException("La fecha de creación no puede estar en el futuro.");
+
+        // Asignación segura luego de corroborar las posibles excepciones
+        Id = id;
+        Caratula = caratula ?? throw new DominioException("La carátula no puede ser nula.");
+        FechaCreacion = fechaCreacion;
+        FechaUltimaModificacion = fechaUltimaModificacion;
+        UsuarioUltimoCambio = usuarioUltimoCambio;
+        Estado = estado;
     }
 
     //Este metodo permite modificar la caratula del expediente, y al mismo tiempo actualiza el usuario que hizo el cambio y la fecha de modificación.
+    //ACTUALIZACION: Agregamos validaciones solicitadas en las observaciones (ID FECHA y Caratula NO vacia)
     public void ModificarCaratula (Caratula nuevaCaratula, Guid idUsuario,DateTime fechaModificacion)
     {
-        this.Caratula = nuevaCaratula;
+        if (idUsuario == Guid.Empty) 
+            throw new DominioException("El usuario que realiza el cambio no puede ser un Guid vacío.");
+        if (fechaModificacion < this.FechaCreacion)
+            throw new DominioException("La fecha de modificación no puede ser anterior a la fecha de creación del expediente.");
+        this.Caratula = nuevaCaratula ?? throw new DominioException("La nueva carátula no puede ser nula.");
         this.UsuarioUltimoCambio = idUsuario;
         this.FechaUltimaModificacion = fechaModificacion;
     }
@@ -43,6 +66,11 @@ public class Expediente
     //Devuelve un booleano indicando si hubo un cambio de estado o no.
     public bool ActualizarEstado (EtiquetaTramite? ultimaEtiqueta, Guid idUsuario, DateTime fechaModificacion)
     {
+        //NUEVAS VALIDACIONES AGREGADAS, IDEM MODIFICAR CARATULA
+        if (idUsuario == Guid.Empty) throw new DominioException("El usuario no puede ser vacío.");
+        if (fechaModificacion < this.FechaCreacion) throw new DominioException("La fecha de modificación es inválida.");
+
+
         // Guardamos el estado anterior para saber si realmente hubo un cambio al final
         EstadoExpediente estadoAnterior = this.Estado;
 
@@ -80,6 +108,10 @@ public class Expediente
     //Este metodo permite cambiar el estado del expediente a cualquier otro
     public void CambiarEstado (EstadoExpediente nuevoEstado, Guid idUsuario,DateTime fechaModificacion)
     {
+        //NUEVAS VALIDACIONES AGREGADAS, IDEM MODIFICAR CARATULA
+        if (idUsuario == Guid.Empty) throw new DominioException("El usuario no puede ser vacío.");
+        if (fechaModificacion < this.FechaCreacion) throw new DominioException("La fecha de modificación es inválida.");
+        
         // Simplemente asignamos el nuevo estado enviado
         this.Estado = nuevoEstado;
         this.UsuarioUltimoCambio = idUsuario;
@@ -87,16 +119,10 @@ public class Expediente
     }
 
     //Este método estático se utiliza para reconstruir un expediente a partir de sus propiedades, lo que es útil para la persistencia y recuperación de datos.
+    //FACTORY METHOD.
     public static Expediente Reconstruir(Guid id, Caratula caratula, DateTime fechaCreacion, DateTime fechaUltimaModificacion, Guid usuarioUltimoCambio, EstadoExpediente estado)
     {
-        var expediente = new Expediente();
-        expediente.Id = id;
-        expediente.Caratula = caratula;
-        expediente.FechaCreacion = fechaCreacion;
-        expediente.FechaUltimaModificacion = fechaUltimaModificacion;
-        expediente.UsuarioUltimoCambio = usuarioUltimoCambio;
-        expediente.Estado = estado;
-        
-        return expediente;
+       // En lugar de usar un constructor vacío e inicializar a mano, llamamos al constructor centralizado
+        return new Expediente(id, caratula, fechaCreacion, fechaUltimaModificacion, usuarioUltimoCambio, estado); 
     }
 }

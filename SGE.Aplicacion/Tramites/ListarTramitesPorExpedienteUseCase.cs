@@ -1,18 +1,21 @@
 namespace SGE.Aplicacion.Tramites;
 
-// Esta clase representa el caso de uso para listar los trámites asociados a un expediente específico.
 public class ListarTramitesPorExpedienteUseCase(ITramiteRepository repo)
 {
-    public IEnumerable<TramiteDTO> Ejecutar(Guid expedienteId)
+    public ListarTramitesResponse Ejecutar(ListarTramitesRequest request)
     {
-        var tramites = repo.ObtenerPorExpedienteId(expedienteId);
+        var tramites = repo.ObtenerPorExpedienteId(request.ExpedienteId);
         
-        return tramites.Select(t => new TramiteDTO {
-            Id = t.Id,
-            ExpedienteId = t.ExpedienteId,
-            Etiqueta = t.Etiqueta.ToString(),
-            Contenido = t.Contenido.Valor, // Usamos .Valor como en la carátula
-            FechaCreacion = t.FechaCreacion
-        });
+        var dtos = tramites.Select(t => new TramiteDTO(
+            t.Id,
+            t.ExpedienteId,
+            t.Etiqueta, 
+            t.Contenido.Valor,
+            t.FechaCreacion,
+            t.FechaUltimaModificacion,
+            t.UsuarioUltimoCambio
+        )).ToList();
+
+        return new ListarTramitesResponse(dtos);
     }
 }

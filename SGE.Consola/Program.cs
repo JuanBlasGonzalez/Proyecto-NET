@@ -9,7 +9,6 @@ using SGE.Dominio.Tramites;
 using SGE.Dominio.Comun; 
 using SGE.Aplicacion.Fecha;
 
-
 Console.WriteLine("=================================================");
 Console.WriteLine("   SGE - SISTEMA DE GESTIÓN DE EXPEDIENTES       ");
 Console.WriteLine("       COMPOSITION ROOT & PRUEBAS DE CAPA        ");
@@ -20,7 +19,11 @@ Console.WriteLine("=================================================");
 // -------------------------------------------------------------
 IExpedienteRepository repoExp = new ExpedienteTxtRepository();
 ITramiteRepository repoTram = new TramiteTxtRepository();
-IAutorizacionService auth = new AutorizacionProvisionalService();
+
+// CORRECCIÓN: Guardamos la instancia concreta en 'authService' para modificar su propiedad en las pruebas,
+// pero mantenemos la inyección a través de la interfaz 'auth' para los Casos de Uso.
+var authService = new AutorizacionProvisionalService();
+IAutorizacionService auth = authService;
 
 IDateTimeProvider dateTimeProvider = new MachineDateTimeProvider(); 
 
@@ -43,7 +46,7 @@ try
     Console.WriteLine("Creando un expediente válido...");
     var reqExp = new AltaExpedienteRequest("Expediente de prueba de Infraestructura Texto", usuarioId);
     var resExp = ucAltaExpediente.Ejecutar(reqExp);
-    expedienteCreadoId = resExp.Id; // Guardamos el ID para usarlo después
+    expedienteCreadoId = resExp.Id; 
     Console.WriteLine($"[OK] Expediente creado exitosamente. ID: {expedienteCreadoId}");
 
     var expCreado = repoExp.ObtenerPorId(expedienteCreadoId.Value);
@@ -58,8 +61,12 @@ try
     Console.WriteLine($"Nuevo estado del expediente: {expModificado?.Estado} (Esperado: ParaResolver)");
 
     Console.WriteLine("\nListando trámites existentes para el expediente:");
-    var lista = ucListarTramites.Ejecutar(expedienteCreadoId.Value);
-    foreach (var t in lista)
+    
+    // 🛠️ CORRECCIÓN: Adaptado a la nueva estructura corporativa simétrica de Request y Response
+    var reqListar = new ListarTramitesRequest(expedienteCreadoId.Value);
+    var responseListar = ucListarTramites.Ejecutar(reqListar);
+    
+    foreach (var t in responseListar.Tramites)
     {
         Console.WriteLine($" -> Trámite ID: {t.Id} | Etiqueta: {t.Etiqueta} | Contenido: {t.Contenido}");
     }
@@ -77,13 +84,12 @@ try
     Console.WriteLine("\n>>> [TEST 2: CAMINO DE ERROR - VALIDADOR DE DOMINIO] <<<");
     Console.WriteLine("Intentando crear un expediente con carátula vacía...");
     
-    // Validamos de poder observar el error de dominio que lanzamos desde el Value Object CARATULA.
     var reqInvalido = new AltaExpedienteRequest("", usuarioId); 
     ucAltaExpediente.Ejecutar(reqInvalido);
     
     Console.WriteLine("[ALERTA] Si ves esto, la validación falló (permitió carátula vacía).");
 }
-catch (ArgumentException ex)
+catch (DominioException ex) // Cambiado a DominioException (la que tiran tus Value Objects al fallar)
 {
     Console.WriteLine($"[ERROR DE DOMINIO CAPTURADO EXITOSAMENTE]: {ex.Message}");
 }
@@ -100,20 +106,29 @@ try
     Console.WriteLine("\n>>> [TEST 3: CAMINO DE ERROR - AUTORIZACIÓN] <<<");
     Console.WriteLine("Simulando acción de usuario no autorizado...");
 
-    // Como pide el enunciado, simulamos el comportamiento de lanzar la excepción
-    // que ocurriría si cambiáramos el retorno del AutorizacionProvisionalService a false
+    //CORRECCIÓN OBSERVACIÓN: En vez de un throw manual e inventado acá, modificamos el booleano del método
+    // que consulta por la autorización. Esto producirá la excepción legítimamente adentro del Caso de Uso.
+    authService.SimularSinPermisos = true;
+
     if (expedienteCreadoId.HasValue)
     {
-        throw new AutorizacionException("El usuario no posee los permisos necesarios para realizar esta operación en el expediente.");
+        var reqTramiteInvalido = new AltaTramiteRequest(expedienteCreadoId.Value, EtiquetaTramite.PaseAEstudio, "Trámite de prueba sin permisos.", usuarioId);
+        ucAltaTramite.Ejecutar(reqTramiteInvalido);
     }
 }
 catch (AutorizacionException ex)
 {
+    // Aquí SOLO capturamos la excepción orgánica generada por el Caso de Uso
     Console.WriteLine($"[ERROR DE AUTORIZACIÓN CAPTURADO EXITOSAMENTE]: {ex.Message}");
 }
 catch (Exception ex)
 {
     Console.WriteLine($"[ERROR GENERAL]: {ex.Message}");
+}
+finally
+{
+    //Desactivamos la simulación de falta de permisos para no afectar otras pruebas o usos posteriores.
+    authService.SimularSinPermisos = false;
 }
 
 Console.WriteLine("\n=================================================");
