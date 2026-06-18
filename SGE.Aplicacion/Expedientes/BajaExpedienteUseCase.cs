@@ -1,14 +1,14 @@
-namespace SGE.Aplicacion.Expedientes;
-
+using SGE.Dominio.Usuarios;
 using SGE.Aplicacion.Autorizacion;
 using SGE.Aplicacion.ExceptionApp;
 using SGE.Dominio.Expedientes;
 using SGE.Aplicacion.Tramites;
 using SGE.Aplicacion.Fecha;
+using SGE.Aplicacion.Interfaces;
 
-// Esta clase representa el caso de uso para la eliminación de un expediente existente.
-// El constructor de la clase toma tres dependencias: un repositorio de expedientes (IExpedienteRepository), un repositorio de trámites (ITramiteRepository) y un servicio de autorización (IAutorizacionService).
-public class BajaExpedienteUseCase(IExpedienteRepository repoExp, ITramiteRepository repoTram, IAutorizacionService auth)
+namespace SGE.Aplicacion.Expedientes;
+
+public class BajaExpedienteUseCase(IExpedienteRepository repoExp, ITramiteRepository repoTram, IAutorizacionService auth, IUnidadDeTrabajo uow)
 {
     public BajaExpedienteResponse Ejecutar(BajaExpedienteRequest request)
     {
@@ -21,17 +21,17 @@ public class BajaExpedienteUseCase(IExpedienteRepository repoExp, ITramiteReposi
         if (existe == null) throw new RepositorioException("El expediente a eliminar no existe.");
         
         // 3. ELIMINACIÓN EN CASCADA
-        // Buscamos los trámites asociados antes de borrar el expediente
         var tramites = repoTram.ObtenerPorExpedienteId(request.IdExpediente);
         foreach (var t in tramites)
         {
-            repoTram.Eliminar(t.Id);
+            repoTram.Eliminar(t.Id); // Marca eliminación de trámites en memoria
         }
 
-        // 3. ELIMINAR EXPEDIENTE
-        repoExp.Eliminar(request.IdExpediente);
+        // 4. ELIMINAR EXPEDIENTE
+        repoExp.Eliminar(request.IdExpediente); // Marca eliminación del expediente en memoria
 
-        // 4. Retornar el DTO de respuesta
+        uow.Guardar(); // LA REGLA DE ORO: Impacta el borrado en cascada entero en un único commit a SQLite
+
         return new BajaExpedienteResponse(true, "Expediente y sus trámites asociados fueron eliminados.");
     }
 }

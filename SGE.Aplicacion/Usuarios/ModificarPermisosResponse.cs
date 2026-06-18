@@ -1,0 +1,1 @@
+public record ModificarPermisosResponse(bool Exito);

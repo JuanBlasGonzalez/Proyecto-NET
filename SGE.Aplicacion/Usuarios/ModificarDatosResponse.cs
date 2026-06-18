@@ -1,0 +1,1 @@
+public record ModificarDatosResponse(bool Exito);

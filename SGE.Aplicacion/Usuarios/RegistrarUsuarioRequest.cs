@@ -1,0 +1,1 @@
+public record RegistrarUsuarioRequest(string Nombre, string CorreoElectronico, string Contrasena);

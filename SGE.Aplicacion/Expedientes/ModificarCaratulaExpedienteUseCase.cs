@@ -1,10 +1,12 @@
-namespace SGE.Aplicacion.Expedientes;
 using SGE.Aplicacion.Autorizacion;
+using SGE.Dominio.Expedientes;
 using SGE.Aplicacion.Fecha;
+using SGE.Dominio.Usuarios;
+using SGE.Aplicacion.Interfaces;
 
-// Esta clase representa el caso de uso para modificar la carátula de un expediente existente.
-// El constructor de la clase toma tres dependencias: un repositorio de expedientes (IExpedienteRepository), un servicio de autorización (IAutorizacionService) y un proveedor de fecha y hora (IDateTimeProvider).
-public class ModificarCaratulaExpedienteUseCase(IExpedienteRepository repo, IAutorizacionService auth, IDateTimeProvider timeProvider)
+namespace SGE.Aplicacion.Expedientes;
+
+public class ModificarCaratulaExpedienteUseCase(IExpedienteRepository repo, IAutorizacionService auth, IDateTimeProvider timeProvider, IUnidadDeTrabajo uow)
 {
    public ModificarCaratulaResponse Ejecutar(ModificarCaratulaRequest request)
     {
@@ -15,10 +17,12 @@ public class ModificarCaratulaExpedienteUseCase(IExpedienteRepository repo, IAut
             ?? throw new Exception("Expediente no encontrado.");
 
         var fechaActual = timeProvider.ObtenerFechaActual();
-        // Usamos el Value Object para validar la nueva carátula
         expediente.ModificarCaratula(new SGE.Dominio.Expedientes.Caratula(request.NuevaCaratula), request.UsuarioId, fechaActual);
 
-        repo.Modificar(expediente);
+        repo.Modificar(expediente); // Marca modificación en memoria
+        
+        uow.Guardar(); // LA REGLA DE ORO
+
         return new ModificarCaratulaResponse(true);
     }
 }

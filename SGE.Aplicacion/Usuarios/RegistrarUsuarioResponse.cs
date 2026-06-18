@@ -1,0 +1,1 @@
+public record RegistrarUsuarioResponse(bool Exito, string Mensaje);

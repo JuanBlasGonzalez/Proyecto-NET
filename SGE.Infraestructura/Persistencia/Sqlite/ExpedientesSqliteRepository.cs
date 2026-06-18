@@ -9,32 +9,34 @@ namespace SGE.Infraestructura.Persistencia.Sqlite;
 
 public class ExpedientesSqliteRepository : IExpedienteRepository
 {
+    private readonly SgeContext _context;
+
+    // Se recibe el contexto único por Inyección de Dependencias
+    public ExpedientesSqliteRepository(SgeContext context)
+    {
+        _context = context;
+    }
+
     public void Agregar(Expediente expediente)
     {
-        using var context = new SgeContext();
-        
         var model = new ExpedienteModel
         {
             Id = expediente.Id,
-            Caratula = expediente.Caratula.Valor, // Value Object a string
-            Estado = expediente.Estado.ToString(), // Enum a string
+            Caratula = expediente.Caratula.Valor,
+            Estado = expediente.Estado.ToString(),
             FechaCreacion = expediente.FechaCreacion,
             FechaUltimaModificacion = expediente.FechaUltimaModificacion,
             UsuarioUltimoCambio = expediente.UsuarioUltimoCambio
         };
         
-        context.Expedientes.Add(model);
-        context.SaveChanges();
+        _context.Expedientes.Add(model); // Solo marcamos en memoria
     }
 
     public Expediente? ObtenerPorId(Guid id)
     {
-        using var context = new SgeContext();
-        var model = context.Expedientes.FirstOrDefault(e => e.Id == id);
-        
+        var model = _context.Expedientes.FirstOrDefault(e => e.Id == id);
         if (model == null) return null;
 
-        // Usamos el Factory Method 'Reconstruir' en vez del constructor
         return Expediente.Reconstruir(
             model.Id,
             new Caratula(model.Caratula),
@@ -47,9 +49,7 @@ public class ExpedientesSqliteRepository : IExpedienteRepository
 
     public IEnumerable<Expediente> ObtenerTodos()
     {
-        using var context = new SgeContext();
-        
-        return context.Expedientes
+        return _context.Expedientes
             .AsEnumerable() 
             .Select(model => Expediente.Reconstruir(
                 model.Id,
@@ -64,9 +64,7 @@ public class ExpedientesSqliteRepository : IExpedienteRepository
 
     public void Modificar(Expediente expediente)
     {
-        using var context = new SgeContext();
-        var model = context.Expedientes.FirstOrDefault(e => e.Id == expediente.Id);
-        
+        var model = _context.Expedientes.FirstOrDefault(e => e.Id == expediente.Id);
         if (model != null)
         {
             model.Caratula = expediente.Caratula.Valor;
@@ -74,19 +72,16 @@ public class ExpedientesSqliteRepository : IExpedienteRepository
             model.FechaUltimaModificacion = expediente.FechaUltimaModificacion;
             model.UsuarioUltimoCambio = expediente.UsuarioUltimoCambio;
             
-            context.SaveChanges();
+            _context.Expedientes.Update(model); // Indicamos la mutación en memoria
         }
     }
 
     public void Eliminar(Guid id)
     {
-        using var context = new SgeContext();
-        var model = context.Expedientes.FirstOrDefault(e => e.Id == id);
-        
+        var model = _context.Expedientes.FirstOrDefault(e => e.Id == id);
         if (model != null)
         {
-            context.Expedientes.Remove(model);
-            context.SaveChanges();
+            _context.Expedientes.Remove(model); // Indicamos la baja en memoria
         }
     }
 }

@@ -1,0 +1,1 @@
+public record LoginResponse(string Token, bool Exito);

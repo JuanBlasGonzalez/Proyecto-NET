@@ -1,41 +1,38 @@
-namespace SGE.Aplicacion.Tramites;
-
-using SGE.Aplicacion.Autorizacion;
+using SGE.Aplicacion.Expedientes;
 using SGE.Dominio.Tramites;
 using SGE.Dominio.Expedientes;
 using SGE.Aplicacion.ExceptionApp;
 using SGE.Aplicacion.Fecha;
+using SGE.Dominio.Usuarios;
+using SGE.Aplicacion.Autorizacion;
+using SGE.Aplicacion.Interfaces;
 
-// Esta clase representa el caso de uso para modificar un trámite existente. 
+namespace SGE.Aplicacion.Tramites;
+
 public class ModificarTramiteUseCase(
     ITramiteRepository repo,
     IAutorizacionService auth,
     ActualizacionEstadoExpedienteService servicioEstado,
-    IDateTimeProvider timeProvider)
+    IDateTimeProvider timeProvider,
+    IUnidadDeTrabajo uow)
 {
-    // El método Ejecutar recibe un DTO de solicitud que contiene la información necesaria para realizar la modificación, como el ID del trámite a modificar, 
-    // el nuevo contenido del trámite, y el ID del usuario que realiza la modificación.
     public ModificarTramiteResponse Ejecutar(ModificarTramiteRequest request)
     {
-        // 1. Validación de permisos
         if (!auth.PoseeElPermiso(request.UsuarioId, Permiso.TramiteModificacion))
             throw new AutorizacionException("No tiene permisos para modificar trámites.");
 
-        // 2. Búsqueda en repositorio
         var tramite = repo.ObtenerPorId(request.IdTramite) 
             ?? throw new RepositorioException("Trámite no encontrado.");
 
-        // 3. Lógica de Dominio
         var fechaActual = timeProvider.ObtenerFechaActual();
         tramite.ModificarContenido(new ContenidoTramite(request.NuevoContenido), request.UsuarioId, fechaActual);
 
-        // 4. Persistencia
-        repo.Modificar(tramite);
+        repo.Modificar(tramite); // Marca modificación en memoria
 
-        // 5. Actualizar el estado del expediente por si el trámite cambió
-        servicioEstado.Actualizar(tramite.ExpedienteId, request.UsuarioId, fechaActual);
+        servicioEstado.Actualizar(tramite.ExpedienteId, request.UsuarioId, fechaActual); // Recalcula y marca el expediente en memoria
 
-        // 6. Retorno de DTO
+        uow.Guardar(); // LA REGLA DE ORO
+
         return new ModificarTramiteResponse(true);
     }
 }

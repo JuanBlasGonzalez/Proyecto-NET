@@ -1,0 +1,1 @@
+public record ModificarDatosRequest(Guid UsuarioId, string Nombre, string CorreoElectronico, string NuevaContrasena);

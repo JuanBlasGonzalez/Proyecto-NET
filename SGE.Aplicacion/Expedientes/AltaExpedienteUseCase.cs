@@ -1,11 +1,12 @@
 using SGE.Aplicacion.Autorizacion;
+using SGE.Dominio.Usuarios;
 using SGE.Dominio.Expedientes;
 using SGE.Aplicacion.Fecha;
+using SGE.Aplicacion.Interfaces; // Asegurá que acá viva IUnidadDeTrabajo
 
 namespace SGE.Aplicacion.Expedientes;
-// Esta clase representa el caso de uso para la creación de un nuevo expediente.
-// El constructor de la clase toma tres dependencias: un repositorio de expedientes (IExpedienteRepository), un servicio de autorización (IAutorizacionService) y un proveedor de fecha y hora (IDateTimeProvider).
-public class AltaExpedienteUseCase(IExpedienteRepository repo, IAutorizacionService auth, IDateTimeProvider timeProvider)
+
+public class AltaExpedienteUseCase(IExpedienteRepository repo, IAutorizacionService auth, IDateTimeProvider timeProvider, IUnidadDeTrabajo uow)
 {
     public AltaExpedienteResponse Ejecutar(AltaExpedienteRequest request)
     {
@@ -17,7 +18,10 @@ public class AltaExpedienteUseCase(IExpedienteRepository repo, IAutorizacionServ
         var expediente = new SGE.Dominio.Expedientes.Expediente(
             new SGE.Dominio.Expedientes.Caratula(request.Caratula), request.UsuarioId, fechaActual);
         
-        repo.Agregar(expediente);
+        repo.Agregar(expediente); // Marca la entidad en memoria
+        
+        uow.Guardar(); // LA REGLA DE ORO: Confirma los cambios de forma atómica
+        
         return new AltaExpedienteResponse(expediente.Id, true);
     }
 }

@@ -2,12 +2,18 @@ using SGE.Aplicacion.Expedientes;
 using SGE.Dominio.Tramites;
 using SGE.Aplicacion.Autorizacion;
 using SGE.Aplicacion.Fecha;
+using SGE.Dominio.Usuarios;
+using SGE.Aplicacion.Interfaces;
 
 namespace SGE.Aplicacion.Tramites;
 
-public class BajaTramiteUseCase(ITramiteRepository repo, IAutorizacionService auth, ActualizacionEstadoExpedienteService servicioEstado, IDateTimeProvider dateTimeProvider)
+public class BajaTramiteUseCase(
+    ITramiteRepository repo, 
+    IAutorizacionService auth, 
+    ActualizacionEstadoExpedienteService servicioEstado, 
+    IDateTimeProvider dateTimeProvider,
+    IUnidadDeTrabajo uow)
 {
-    // Ahora recibe el Request corporativo y devuelve el Response correspondiente
     public BajaTramiteResponse Ejecutar(BajaTramiteRequest request)
     {
         if (!auth.PoseeElPermiso(request.UsuarioId, Permiso.TramiteBaja))
@@ -17,10 +23,11 @@ public class BajaTramiteUseCase(ITramiteRepository repo, IAutorizacionService au
             ?? throw new Exception("No existe el trámite especificado.");
             
         var fechaActual = dateTimeProvider.ObtenerFechaActual();
-        repo.Eliminar(request.TramiteId);
+        repo.Eliminar(request.TramiteId); // Marca eliminación en memoria
 
-        // Al borrarlo, el expediente debe recalcular su estado
-        servicioEstado.Actualizar(tramite.ExpedienteId, request.UsuarioId, fechaActual);
+        servicioEstado.Actualizar(tramite.ExpedienteId, request.UsuarioId, fechaActual); // Recalcula y marca el expediente en memoria
+
+        uow.Guardar(); // LA REGLA DE ORO
 
         return new BajaTramiteResponse(true, "Trámite eliminado exitosamente y estado de expediente recalculado.");
     }

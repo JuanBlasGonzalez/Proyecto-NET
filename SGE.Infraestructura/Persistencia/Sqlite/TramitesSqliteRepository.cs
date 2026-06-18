@@ -9,30 +9,32 @@ namespace SGE.Infraestructura.Persistencia.Sqlite;
 
 public class TramitesSqliteRepository : ITramiteRepository
 {
+    private readonly SgeContext _context;
+
+    public TramitesSqliteRepository(SgeContext context)
+    {
+        _context = context;
+    }
+
     public void Agregar(Tramite tramite)
     {
-        using var context = new SgeContext();
-        
         var model = new TramiteModel
         {
             Id = tramite.Id,
             ExpedienteId = tramite.ExpedienteId,
             Etiqueta = tramite.Etiqueta.ToString(),
-            Contenido = tramite.Contenido.Valor, // Value Object a string
+            Contenido = tramite.Contenido.Valor,
             FechaCreacion = tramite.FechaCreacion,
             FechaUltimaModificacion = tramite.FechaUltimaModificacion,
             UsuarioUltimoCambio = tramite.UsuarioUltimoCambio
         };
         
-        context.Tramites.Add(model);
-        context.SaveChanges();
+        _context.Tramites.Add(model);
     }
 
     public Tramite? ObtenerPorId(Guid id)
     {
-        using var context = new SgeContext();
-        var model = context.Tramites.FirstOrDefault(t => t.Id == id);
-        
+        var model = _context.Tramites.FirstOrDefault(t => t.Id == id);
         if (model == null) return null;
 
         return Tramite.Reconstruir(
@@ -48,9 +50,7 @@ public class TramitesSqliteRepository : ITramiteRepository
 
     public IEnumerable<Tramite> ObtenerPorExpedienteId(Guid expedienteId)
     {
-        using var context = new SgeContext();
-        
-        return context.Tramites
+        return _context.Tramites
             .Where(t => t.ExpedienteId == expedienteId)
             .AsEnumerable()
             .Select(model => Tramite.Reconstruir(
@@ -67,9 +67,7 @@ public class TramitesSqliteRepository : ITramiteRepository
 
     public void Modificar(Tramite tramite)
     {
-        using var context = new SgeContext();
-        var model = context.Tramites.FirstOrDefault(t => t.Id == tramite.Id);
-        
+        var model = _context.Tramites.FirstOrDefault(t => t.Id == tramite.Id);
         if (model != null)
         {
             model.Etiqueta = tramite.Etiqueta.ToString();
@@ -77,19 +75,16 @@ public class TramitesSqliteRepository : ITramiteRepository
             model.FechaUltimaModificacion = tramite.FechaUltimaModificacion;
             model.UsuarioUltimoCambio = tramite.UsuarioUltimoCambio;
             
-            context.SaveChanges();
+            _context.Tramites.Update(model);
         }
     }
 
     public void Eliminar(Guid id)
     {
-        using var context = new SgeContext();
-        var model = context.Tramites.FirstOrDefault(t => t.Id == id);
-        
+        var model = _context.Tramites.FirstOrDefault(t => t.Id == id);
         if (model != null)
         {
-            context.Tramites.Remove(model);
-            context.SaveChanges();
+            _context.Tramites.Remove(model);
         }
     }
 }
