@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Consola\\SGE.Consola.csproj": {}
+    "c:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Consola\\SGE.Consola.csproj": {}
   },
   "projects": {
     "C:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Aplicacion\\SGE.Aplicacion.csproj": {
@@ -341,14 +341,14 @@
         }
       }
     },
-    "C:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Consola\\SGE.Consola.csproj": {
+    "c:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Consola\\SGE.Consola.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Consola\\SGE.Consola.csproj",
+        "projectUniqueName": "c:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Consola\\SGE.Consola.csproj",
         "projectName": "SGE.Consola",
-        "projectPath": "C:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Consola\\SGE.Consola.csproj",
+        "projectPath": "c:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Consola\\SGE.Consola.csproj",
         "packagesPath": "C:\\Users\\valen\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Consola\\obj\\",
+        "outputPath": "c:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Consola\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\valen\\AppData\\Roaming\\NuGet\\NuGet.Config"
