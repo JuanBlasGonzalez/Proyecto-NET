@@ -33,7 +33,7 @@ public class ModificarMisDatosUseCase(IUsuarioRepository repo, IPasswordHasher h
 
         // Marcar actualización en repositorio y guardar cambios de forma transaccional
         repo.Modificar(usuarioModificado);
-        uow.Guardar(); // Regla de Oro
+        uow.Guardar(); 
 
         return new ModificarDatosResponse(true);
     }

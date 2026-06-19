@@ -9,7 +9,7 @@ public class EliminarUsuarioUseCase(IUsuarioRepository repo, IUnidadDeTrabajo uo
     // Recibe el ID del ejecutor (desde el token JWT) y el Request corporativo
     public EliminarUsuarioResponse Ejecutar(Guid ejecutorId, EliminarUsuarioRequest request)
     {
-        // REGLA DE CONTROL OBLIGATORIA: Primera instancia de verificación
+        
         var ejecutor = repo.ObtenerPorId(ejecutorId);
         if (ejecutor == null || !ejecutor.EsAdministrador)
             throw new AutorizacionException("Acción denegada: Se requieren privilegios de Administrador.");
@@ -21,7 +21,7 @@ public class EliminarUsuarioUseCase(IUsuarioRepository repo, IUnidadDeTrabajo uo
 
         repo.Eliminar(request.UsuarioAEliminarId);
         
-        // LA REGLA DE ORO: Guardado atómico
+        // Guardado atómico --> unit of work
         uow.Guardar(); 
 
         return new EliminarUsuarioResponse(true, "Usuario eliminado correctamente del sistema.");

@@ -9,14 +9,14 @@ using SGE.Infraestructura.Servicios;
 using SGE.WebApi.Endpoints;
 using SGE.WebApi.Middlewares;
 using SGE.WebApi.Services;
-using Scalar.AspNetCore; // Si te chilla acá, recordá instalar el paquete NuGet en WebApi: dotnet add package Scalar.AspNetCore
+using Scalar.AspNetCore; 
 using System.Text;
 using SGE.Aplicacion.Fecha;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ==========================================
-// 🛠️ 1. REGISTRO DE SERVICIOS (INYECCIÓN DE DEPENDENCIAS)
+//  1. REGISTRO DE SERVICIOS (INYECCIÓN DE DEPENDENCIAS)
 // ==========================================
 
 // Base de Datos (Contexto único por Request)
@@ -37,31 +37,25 @@ builder.Services.AddSingleton<ITokenService, TokenService>();
 // Servicio interno requerido por los Casos de Uso de Trámites
 builder.Services.AddScoped<ActualizacionEstadoExpedienteService>();
 
-// Tus Casos de Uso Reales (Trámites) con tus nombres reales
+// Casos de Uso Tramites
 builder.Services.AddScoped<AltaTramiteUseCase>();
 builder.Services.AddScoped<BajaTramiteUseCase>();
 builder.Services.AddScoped<ModificarTramiteUseCase>();
 builder.Services.AddScoped<ListarTramitesPorExpedienteUseCase>();
 
-// Tus Casos de Uso Reales (Expedientes)
+// Casos de Uso Expedientes
 builder.Services.AddScoped<AltaExpedienteUseCase>();
 builder.Services.AddScoped<BajaExpedienteUseCase>();
 builder.Services.AddScoped<ModificarCaratulaExpedienteUseCase>();
 builder.Services.AddScoped<CambiarEstadoExpedienteUseCase>();
 builder.Services.AddScoped<ListarExpedientesUseCase>();
 
-// Tus Casos de Uso Reales (Trámites)
-builder.Services.AddScoped<AltaTramiteUseCase>();
-builder.Services.AddScoped<BajaTramiteUseCase>();
-builder.Services.AddScoped<ModificarTramiteUseCase>();
-builder.Services.AddScoped<ListarTramitesPorExpedienteUseCase>();
-
 // Middleware del Manejador de Excepciones Global (ProblemDetails)
 builder.Services.AddExceptionHandler<ManejadorExcepciones>();
 builder.Services.AddProblemDetails();
 
 // ==========================================
-// 🔐 2. CONFIGURACIÓN DE AUTENTICACIÓN JWT ESTRICTA
+// 2. CONFIGURACIÓN DE AUTENTICACIÓN JWT ESTRICTA
 // ==========================================
 var key = Encoding.UTF8.GetBytes(TokenService.SecretKey);
 
@@ -93,7 +87,7 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 
 // ==========================================
-// 🌍 3. INICIALIZACIÓN AUTOMÁTICA DE SQLITE
+// 3. INICIALIZACIÓN AUTOMÁTICA DE SQLITE
 // ==========================================
 using (var scope = app.Services.CreateScope())
 {
@@ -102,7 +96,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 // ==========================================
-// 🚀 4. PIPELINE DE MIDDLEWARES (ORDEN DE CÁTEDRA)
+// 4. PIPELINE DE MIDDLEWARES (ORDEN DE CÁTEDRA)
 // ==========================================
 
 app.UseExceptionHandler(); // Captura los errores globales primero de todo

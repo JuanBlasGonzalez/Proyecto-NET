@@ -33,21 +33,21 @@ public class ManejadorExcepciones : IExceptionHandler
 
         switch (exception)
         {
-            // Requisito Cátedra: Retorna 403 Forbidden
+            // Retorna 403 Forbidden
             case AutorizacionException:
                 problemDetails.Status = (int)HttpStatusCode.Forbidden; 
                 problemDetails.Title = "Acceso Denegado";
                 problemDetails.Detail = exception.Message;
                 break;
 
-            // Requisito Cátedra: Retorna 404 Not Found
+            // Retorna 404 Not Found
             case EntidadNoEncontradaException:
                 problemDetails.Status = (int)HttpStatusCode.NotFound; 
                 problemDetails.Title = "Recurso No Encontrado";
                 problemDetails.Detail = exception.Message;
                 break;
 
-            // Requisito Cátedra: Errores de validación de Dominio retornan 400 Bad Request
+            // Errores de validación de Dominio retornan 400 Bad Request
             case DominioException:
             case ArgumentException:
             case InvalidOperationException:

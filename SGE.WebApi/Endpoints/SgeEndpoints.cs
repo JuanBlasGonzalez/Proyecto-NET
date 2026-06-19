@@ -63,7 +63,7 @@ public static class SgeEndpoints
             return Results.Ok(response);
         });
 
-        // Modificación de Expediente (Ejecuta tus dos Casos de Uso específicos de modificación)
+        // Modificación de Expediente
         expedientesGrupo.MapPut("/{id:guid}", (
             Guid id, 
             [FromBody] ModificarExpedienteApiInput apiRequest, 
@@ -73,11 +73,11 @@ public static class SgeEndpoints
         {
             var usuarioId = ObtenerUsuarioId(user);
             
-            // 1. Modificamos carátula si viene informada
+            // Modificamos carátula si viene informada
             var requestCaratula = new ModificarCaratulaRequest(id, apiRequest.Caratula, usuarioId);
             usoCaratula.Ejecutar(requestCaratula);
 
-            // 2. Cambiamos el estado si viene informado
+            // Cambiamos el estado si viene informado
             var requestEstado = new CambiarEstadoRequest(id, apiRequest.Estado, usuarioId);
             usoEstado.Ejecutar(requestEstado);
             
@@ -112,7 +112,7 @@ public static class SgeEndpoints
         {
             var usuarioId = ObtenerUsuarioId(user);
             
-            // CORRECCIÓN HISTÓRICA: Se instancia el Request con los 4 parámetros agrupados
+            // Se instancia el Request con los 4 parámetros agrupados
             var appRequest = new AltaTramiteRequest(
                 apiRequest.ExpedienteId, 
                 apiRequest.Etiqueta, 
