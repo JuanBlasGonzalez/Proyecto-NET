@@ -8,7 +8,7 @@ public class Expediente
 {
     //Propiedades: Acceso publico para lectura (get), pero solo la clase puede modificar el atributo por el private
     public Guid Id { get; private set; } 
-    public Caratula Caratula { get; private set; } //Value object q valida el texto
+    public Caratula Caratula { get; private set; } = null!; //Value object q valida el texto
     public DateTime FechaCreacion { get; private set; } 
     public DateTime FechaUltimaModificacion { get; private set; } 
     public Guid UsuarioUltimoCambio { get; private set; } 

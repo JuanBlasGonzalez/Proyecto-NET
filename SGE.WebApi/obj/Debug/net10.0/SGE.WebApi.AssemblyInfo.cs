@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SGE.WebApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f83a2cc293a30f2f8f00177c0bc8e2186bf32f77")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1ecffcc3bc1645da8378ab7dddc13b2341ad2598")]
 [assembly: System.Reflection.AssemblyProductAttribute("SGE.WebApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SGE.WebApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
