@@ -7,6 +7,7 @@ using SGE.Dominio.Expedientes;
 using SGE.Dominio.Tramites;
 using SGE.WebApi.Services;
 using System.Security.Claims;
+using System.Text.Json.Serialization;
 
 namespace SGE.WebApi.Endpoints;
 
@@ -17,7 +18,7 @@ public static class SgeEndpoints
         // ==========================================
         // GRUPO: AUTENTICACIÓN (LOGIN)
         // ==========================================
-        app.MapPost("/api/auth/login", (
+        /*app.MapPost("/api/auth/login", (
             [FromBody] LoginApiInput request,
             IUsuarioRepository repoUsuario,
             IPasswordHasher hasher,
@@ -33,7 +34,31 @@ public static class SgeEndpoints
             return Results.Ok(new { Token = token, Usuario = usuario.Nombre });
         })
         .WithName("Login")
-        .WithTags("Autenticación");
+        .WithTags("Autenticación");*/
+        app.MapPost("/api/auth/login", (
+            [FromBody] LoginApiInput request,
+            IUsuarioRepository repoUsuario,
+            IPasswordHasher hasher,
+            ITokenService tokenService) =>
+        {
+            var usuario = repoUsuario.ObtenerPorCorreo(request.CorreoElectronico);
+            
+            // LOGS DE DEBBUGGING, de la mano con la clase PasswordHasher.cs para verificar el hash de la contraseña, aunque esto lo dejamos para verificar los resultados.
+            if (usuario == null) {
+                Console.WriteLine($"DEBUG: Usuario no encontrado para el correo: {request.CorreoElectronico}");
+            } else {
+                bool esValida = hasher.VerificarHash(request.Contrasena, usuario.ContrasenaHash);
+                Console.WriteLine($"DEBUG: Usuario encontrado: {usuario.Nombre}. ¿Contraseña válida?: {esValida}");
+            }
+
+            if (usuario == null || !hasher.VerificarHash(request.Contrasena, usuario.ContrasenaHash))
+            {
+                return Results.Problem(detail: "Credenciales inválidas.", statusCode: 401, title: "No Autorizado");
+            }
+
+            var token = tokenService.GenerarToken(usuario);
+            return Results.Ok(new { Token = token, Usuario = usuario.Nombre });
+        });
 
 
         // ==========================================
@@ -173,7 +198,11 @@ public static class SgeEndpoints
 }
 
 // DTOs de entrada limpios mapeados desde el JSON entrante de HTTP (Evitamos colisiones de nombres)
-public record LoginApiInput(string CorreoElectronico, string Contrasena);
+//public record LoginApiInput(string CorreoElectronico, string Contrasena);
+public record LoginApiInput(
+    [property: JsonPropertyName("correoElectronico")] string CorreoElectronico, 
+    [property: JsonPropertyName("contrasena")] string Contrasena
+);
 public record CrearExpedienteApiInput(string Caratula);
 public record ModificarExpedienteApiInput(string Caratula, EstadoExpediente Estado);
 public record CrearTramiteApiInput(Guid ExpedienteId, EtiquetaTramite Etiqueta, string Contenido);

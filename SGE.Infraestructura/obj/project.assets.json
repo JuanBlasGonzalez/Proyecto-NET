@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
     "net10.0": {
       "Microsoft.Data.Sqlite.Core/10.0.9": {
@@ -1044,19 +1044,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\valen\\.nuget\\packages\\": {}
+    "C:\\Users\\jbgs2\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Infraestructura\\SGE.Infraestructura.csproj",
+      "projectUniqueName": "C:\\Users\\jbgs2\\Documents\\Facultad\\.NET\\TpFinal\\SGE\\SGE.Infraestructura\\SGE.Infraestructura.csproj",
       "projectName": "SGE.Infraestructura",
-      "projectPath": "C:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Infraestructura\\SGE.Infraestructura.csproj",
-      "packagesPath": "C:\\Users\\valen\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Infraestructura\\obj\\",
+      "projectPath": "C:\\Users\\jbgs2\\Documents\\Facultad\\.NET\\TpFinal\\SGE\\SGE.Infraestructura\\SGE.Infraestructura.csproj",
+      "packagesPath": "C:\\Users\\jbgs2\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\jbgs2\\Documents\\Facultad\\.NET\\TpFinal\\SGE\\SGE.Infraestructura\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\valen\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\jbgs2\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -1066,13 +1066,14 @@
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "C:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Aplicacion\\SGE.Aplicacion.csproj": {
-              "projectPath": "C:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Aplicacion\\SGE.Aplicacion.csproj"
+            "C:\\Users\\jbgs2\\Documents\\Facultad\\.NET\\TpFinal\\SGE\\SGE.Aplicacion\\SGE.Aplicacion.csproj": {
+              "projectPath": "C:\\Users\\jbgs2\\Documents\\Facultad\\.NET\\TpFinal\\SGE\\SGE.Aplicacion\\SGE.Aplicacion.csproj"
             },
-            "C:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Dominio\\SGE.Dominio.csproj": {
-              "projectPath": "C:\\Users\\valen\\OneDrive\\Escritorio\\Facultad\\2026\\.NET\\SGE\\SGE.Dominio\\SGE.Dominio.csproj"
+            "C:\\Users\\jbgs2\\Documents\\Facultad\\.NET\\TpFinal\\SGE\\SGE.Dominio\\SGE.Dominio.csproj": {
+              "projectPath": "C:\\Users\\jbgs2\\Documents\\Facultad\\.NET\\TpFinal\\SGE\\SGE.Dominio\\SGE.Dominio.csproj"
             }
           }
         }
@@ -1087,10 +1088,11 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
       "net10.0": {
+        "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Sqlite": {
@@ -1114,7 +1116,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.200/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -1391,5 +1393,17 @@
         }
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "El paquete \"SQLitePCLRaw.lib.e_sqlite3\" 2.1.11 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-2m69-gcr7-jv3q",
+      "libraryId": "SQLitePCLRaw.lib.e_sqlite3",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
 }
